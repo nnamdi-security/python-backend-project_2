@@ -219,3 +219,13 @@ parcels = load_parcels()
 
 tracking_index = build_tracking_index(parcels)
 destination_index = build_destination_index(parcels)
+
+print(f"{len(parcels)} parcels loaded.")
+print(f"{len(tracking_index)} tracking codes indexed.")
+print(f"{len(destination_index)} destinations indexed.")
+
+kano_positions = destination_index.get("Kano", [])
+print(f"{len(kano_positions)} parcels are heading to kano")
+
+for position in kano_positions[:5]:
+    print(parcels[position]["tracking_code"])
