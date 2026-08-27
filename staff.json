@@ -1,0 +1,22 @@
+[
+    {
+        "username": "oga_musty",
+        "password_hash": "bcd2e1bed4c03318d006c0b08e017245b679aa7266dff2b7cd6fa55056225f0d",
+        "position": "Station Master"
+    },
+    {
+        "username": "kemi_dispatch",
+        "password_hash": "f75df730688b9583f7fce182caaa7dedd0dc2e0e740f0daf18852208fc6d14ab",
+        "position": "Clerk"
+    },
+    {
+        "username": "ibrahim_k",
+        "password_hash": "9d6abb3a1de292f015e81db73c17528c3535639021c8001b91903ea0d5801805",
+        "position": "Clerk"
+    },
+    {
+        "username": "ngozi_front",
+        "password_hash": "bb56acd76a29825a57eac35cacdf947e130bdeb99245d8dee914537e7eeda287",
+        "position": "Clerk"
+    }
+]
