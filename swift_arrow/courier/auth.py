@@ -148,6 +148,19 @@ def validate_token(token):
 
 
 
+
+def get_token_of_user(token):
+    token_data = validate_token(token)
+
+    if token_data is None:
+        return None
+
+    return token_data
+
+
+
+
+
 def logout(token):
     if token in active_tokens:
         return True

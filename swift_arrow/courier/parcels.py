@@ -121,8 +121,8 @@ def update_parcel(code, parcels, tracking_index):
     return f"200 - Parcel {code} updated successfully."
 
 
-def delete_parcel(code, role, parcels, tracking_index):
-    if role != "Station Master":
+def delete_parcel(code, user, parcels, tracking_index):
+    if user["position"] != "Station Master":
         return "403 - Clerks may not delete parcels. Speak to the Station Master."
 
     if code not in tracking_index:

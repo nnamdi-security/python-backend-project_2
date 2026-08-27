@@ -499988,15 +499988,5 @@
         "status": "out for delivery",
         "weight_kg": 4.5,
         "date_shipped": "2026-08-01"
-    },
-    {
-        "tracking_code": "SA-9133872-YB",
-        "sender": "Funke Suleiman",
-        "receiver": "Femi Lawal",
-        "origin": "Lagos",
-        "destination": "Ibadan",
-        "status": "delivered",
-        "weight_kg": 34.2,
-        "date_shipped": "2026-06-11"
     }
 ]
