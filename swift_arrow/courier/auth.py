@@ -1,6 +1,8 @@
 import json
 import hashlib
 import os
+import secrets
+import time
 
 STAFF_FILE = "staff.json"
 
@@ -108,4 +110,48 @@ def login(username, password, staff):
             return None
         
     return None
-         
+
+
+active_tokens = {}
+
+def create_token(staff_member):
+    token = secrets.token_urlsafe(24)
+
+    active_tokens[token] = {
+        "username": staff_member["username"],
+        "position": staff_member["position"],
+        "created_at": time.time()
+    }
+
+    return token
+
+
+
+
+
+
+def validate_token(token):
+    if token not in active_tokens:
+        return None
+
+    token_data = active_tokens[token]
+
+    current_time = time.time()
+
+    token_age = current_time - token_data["created_at"]
+
+    if token_age > 300:
+        del active_tokens[token]
+        return None
+
+    return token_data
+
+
+
+def logout(token):
+    if token in active_tokens:
+        return True
+
+    return False
+
+
