@@ -28,11 +28,47 @@ def find_parcel(code, parcels, tracking_index):
 
 
 
+def find_parcels_by_destination(city, parcels, destination_index):
+    start_time = time.perf_counter()
+
+    city_key = city.lower()
+
+    if city_key not in destination_index:
+        end_time = time.perf_counter()
+        time_taken = (end_time - start_time) * 1000
+
+        return (
+            f"404 - No parcels are heading to {city} "
+            f"Search took {time_taken:.4f} ms"
+        )
+
+    positions = destination_index[city_key]
+
+    result_lines = []
+
+    for position in positions:
+        parcel = parcels[position]
+
+        line = (
+            f"{parcel["tracking_code"]} | "
+            f"{parcel["sender"]} -> {parcel["receiver"]} | "
+            f"{parcel["status"]}"
+        )
+
+        result_lines.append(line)
+
+    end_time = time.perf_counter()
+    time_taken = (end_time - start_time) * 1000
+
+    heading = (
+        f"200 - {len(positions)} parcels found "
+        f"in {time_taken:.4f} ms"
+    )
+
+    return heading + "\n" + "\n".join(result_lines)
 
 
-
-
-def add_parcel(parcels, tracking_index):
+def add_parcel(parcels, tracking_index, destination_index):
     print("\n--- Register New Parcel")
 
     tracking_code = input("Enter the percel tracking code: ").strip()
@@ -84,11 +120,23 @@ def add_parcel(parcels, tracking_index):
     position = len(parcels) - 1
     tracking_index[tracking_code] = position
 
+    destination_key = destination.lower()
+
+    if destination_key not in destination_index:
+        destination_index[destination_key] = []
+
+    destination_index[destination_key].append(position)
+
     saved = save_parcels(parcels)
 
     if not saved:
         parcels.pop()
         del tracking_index[tracking_code]
+
+        destination_index[destination_key].remove(position)
+
+        if destination_index[destination_key] == []:
+            del destination_index[destination_key]
 
         return "400 - Parcel could not be saved."
 
@@ -125,7 +173,7 @@ def update_parcel(code, parcels, tracking_index):
     return f"200 - Parcel {code} updated successfully."
 
 
-def delete_parcel(code, user, parcels, tracking_index):
+def delete_parcel(code, user, parcels, tracking_index, destination_index):
     if user["position"] != "Station Master":
         return "403 - Clerks may not delete parcels. Speak to the Station Master."
 
@@ -141,10 +189,18 @@ def delete_parcel(code, user, parcels, tracking_index):
         return "400 - Parcel could not be deleted."
 
     tracking_index.clear()
+    destination_index.clear()
 
     for new_position in range(len(parcels)):
         tracking_code = parcels[new_position]["tracking_code"]
+        destination = parcels[new_position]["destination"].lower()
+
         tracking_index[tracking_code] = new_position
+
+        if destination not in destination_index:
+            destination_index[destination] = []
+
+        destination_index[destination].append(new_position)
 
     return f"200 - Parcel {code} deleted successfully"
 

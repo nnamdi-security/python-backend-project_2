@@ -45,7 +45,7 @@ def build_destination_index(parcels):
 
     for position in range(len(parcels)):
         parcel = parcels[position]
-        destination = parcel["destination"]
+        destination = parcel["destination"].lower()
 
         if destination not in destination_index:
             destination_index[destination] = []
