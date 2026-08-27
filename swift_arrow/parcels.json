@@ -499978,15 +499978,5 @@
         "status": "at station",
         "weight_kg": 13.6,
         "date_shipped": "2026-03-12"
-    },
-    {
-        "tracking_code": "SA-0240355-CR",
-        "sender": "Obi Abubakar",
-        "receiver": "Uche Lawal",
-        "origin": "Sokoto",
-        "destination": "Abeokuta",
-        "status": "out for delivery",
-        "weight_kg": 4.5,
-        "date_shipped": "2026-08-01"
     }
 ]

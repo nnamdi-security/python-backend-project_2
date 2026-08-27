@@ -40,3 +40,21 @@ def build_tracking_index(parcels):
     return index
 
 
+def build_destination_index(parcels):
+    destination_index = {}
+
+    for position in range(len(parcels)):
+        parcel = parcels[position]
+        destination = parcel["destination"]
+
+        if destination not in destination_index:
+            destination_index[destination] = []
+
+        destination_index[destination].append(position)
+
+    return destination_index
+
+
+
+
+
