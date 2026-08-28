@@ -499978,5 +499978,15 @@
         "status": "at station",
         "weight_kg": 13.6,
         "date_shipped": "2026-03-12"
+    },
+    {
+        "tracking_code": "SA-TESTCACHE-AA",
+        "sender": "Ajala wolewole",
+        "receiver": "Seyi Makinde",
+        "origin": "Enugu",
+        "destination": "Lagos",
+        "status": "delivered",
+        "weight_kg": 3.5,
+        "date_shipped": "2026-08-28"
     }
 ]

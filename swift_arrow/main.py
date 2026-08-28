@@ -204,11 +204,15 @@ else:
 
         elif slip == "2":
 
-            reply = add_parcel(parcels, tracking_index)
+            reply = find_parcels_by_destination(city, parcels, destination_index)
+
+        elif slip == "3":
+
+            reply = add_parcel(parcels, tracking_index, destination_index)
 
             print(reply)
 
-        elif slip == "3":
+        elif slip == "4":
 
             code = input("Enter trackig code to update: ").strip()
 
@@ -216,7 +220,7 @@ else:
 
             print(reply)
 
-        elif slip == "4":
+        elif slip == "5":
 
             code = input("Enter tracking code to delete: ").strip()
 

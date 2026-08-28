@@ -1,8 +1,23 @@
 import time
 from courier.data import save_parcels
+from courier.cache import get_from_cache, save_to_cache, remove_from_cache
 
 def find_parcel(code, parcels, tracking_index):
     start_time = time.perf_counter()
+
+    cache_key = f"parcel:{code}"
+
+    cached_answer = get_from_cache(cache_key)
+
+    if cached_answer is not None:
+        end_time = time.perf_counter()
+        time_taken = (end_time - start_time) * 1000
+
+        return (
+            f"200 - Found in {time_taken:.4f} ms "
+            f"(from the tray)\n"
+            f"{cached_answer}"
+        )
 
     if code not in tracking_index:
         end_time = time.perf_counter()
@@ -13,11 +28,9 @@ def find_parcel(code, parcels, tracking_index):
     position = tracking_index[code]
     parcel = parcels[position]
 
-    end_time = time.perf_counter()
-    time_taken = (end_time - start_time) * 1000
 
-    return (
-        f"200 - Found in {time_taken:.4f} ms\n"
+
+    parcel_details = (
         f"{parcel["tracking_code"]} | "
         f"{parcel["sender"]} -> {parcel["receiver"]}\n"
         f"{parcel["origin"]} -> {parcel["destination"]} | "
@@ -26,12 +39,38 @@ def find_parcel(code, parcels, tracking_index):
         f" shipped {parcel["date_shipped"]}"
     )
 
+    save_to_cache(cache_key, parcel_details)
+
+    end_time = time.perf_counter()
+    time_taken = (end_time - start_time) * 1000
+
+    return (
+        f"200 - Found in {time_taken:.4f} ms\n"
+        f"{parcel_details}"
+    )
+
+
+
 
 
 def find_parcels_by_destination(city, parcels, destination_index):
     start_time = time.perf_counter()
 
     city_key = city.lower()
+
+    cache_key = f"city:{city_key}"
+
+    cached_answer = get_from_cache(cache_key)
+
+    if cached_answer is not None:
+        end_time = time.perf_counter()
+        time_taken = (end_time - start_time) * 1000
+
+        return (
+            f"200 - {cached_answer["count"]} parcels in "
+            f"{time_taken:.4f} ms (from the tray)\n"
+            f"{cached_answer["details"]}"
+        )
 
     if city_key not in destination_index:
         end_time = time.perf_counter()
@@ -57,15 +96,29 @@ def find_parcels_by_destination(city, parcels, destination_index):
 
         result_lines.append(line)
 
+    details = "\n".join(result_lines)
+
+    save_to_cache(
+        cache_key,
+        {
+            "count": len(positions),
+            "details": details
+        }
+    )
+
     end_time = time.perf_counter()
     time_taken = (end_time - start_time) * 1000
 
-    heading = (
+    return (
         f"200 - {len(positions)} parcels found "
-        f"in {time_taken:.4f} ms"
+        f"in {time_taken:.4f} ms\n"
+        f"{details}"
     )
 
-    return heading + "\n" + "\n".join(result_lines)
+
+
+
+
 
 
 def add_parcel(parcels, tracking_index, destination_index):
@@ -140,7 +193,11 @@ def add_parcel(parcels, tracking_index, destination_index):
 
         return "400 - Parcel could not be saved."
 
+    remove_from_cache(f"city:{destination_key}")
+
     return f"201 - Parcel {tracking_code} registered successfully."
+
+
 
 
 
@@ -159,7 +216,9 @@ def update_parcel(code, parcels, tracking_index):
 
     if new_status == "":
         return "400 - status cannot be empty."
-    
+
+    destination = parcel["destination"].lower()
+
     old_status = parcel["status"]
 
     parcel["status"] = new_status
@@ -170,7 +229,15 @@ def update_parcel(code, parcels, tracking_index):
         parcel["status"] = old_status
         return "400 - Parcel could not be updated"
 
+    remove_from_cache(f"parcel:{code}")
+    remove_from_cache(f"city:{destination}")
+
     return f"200 - Parcel {code} updated successfully."
+
+
+
+
+
 
 
 def delete_parcel(code, user, parcels, tracking_index, destination_index):
@@ -181,7 +248,11 @@ def delete_parcel(code, user, parcels, tracking_index, destination_index):
         return f"404 - There is no parcel {code}"
 
     position = tracking_index[code]
+
+    destination = parcels[position]["destination"].lower()
+
     deleted_parcel = parcels.pop(position)
+
     saved = save_parcels(parcels)
 
     if not saved:
@@ -202,5 +273,9 @@ def delete_parcel(code, user, parcels, tracking_index, destination_index):
 
         destination_index[destination].append(new_position)
 
+    remove_from_cache(f"parcel:{code}")
+    remove_from_cache(f"city:{destination}")
+
     return f"200 - Parcel {code} deleted successfully"
+
 
