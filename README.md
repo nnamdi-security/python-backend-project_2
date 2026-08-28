@@ -1,10 +1,12 @@
-# Swift Arrow Couriers
+# Swift Arrow Couriers  | [![wakatime](https://wakatime.com/badge/user/55f2e7d8-e681-415e-ba87-93dc727f5023/project/0ec0238d-7cf8-4ddd-8c4f-3c4cc8684165.svg)](https://wakatime.com/badge/user/55f2e7d8-e681-415e-ba87-93dc727f5023/project/0ec0238d-7cf8-4ddd-8c4f-3c4cc8684165)
 
 A lightweight Python console application for managing and tracking parcels at scale.
 
 Swift Arrow Couriers was built around a 50,000-record parcel ledger and demonstrates practical backend fundamentals using only core Python: fast indexing, caching, JSON persistence, password hashing, token-based authentication, role-based authorization, and CRUD operations.
 
 The project intentionally avoids frameworks and classes so the underlying logic remains easy to understand and explain.
+
+
 
 ---
 
